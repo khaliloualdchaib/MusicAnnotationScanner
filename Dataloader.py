@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 import json
-
+from math import floor
 
 class FAAMDataset(Dataset):
 
@@ -27,14 +27,16 @@ class FAAMDataset(Dataset):
             idx = idx.tolist()
 
         img_name = os.getcwd() + self.json["images"][idx]["path"]
-        print(img_name)
         image = io.imread(img_name)
 
         if self.transform:
             image = self.transform(image)
-
         return image
-        
-
-        
-
+    
+    def getAverageSize(self):
+        width = 0
+        height = 0
+        for i in self.json["images"]:
+            width += i["width"]
+            height += i["height"]
+        return (floor(width/len(self.json["images"])), floor(height/len(self.json["images"])))
