@@ -1,0 +1,29 @@
+{
+    "images": [
+        {
+            "id": 5,
+            "dataset_id": 2,
+            "category_ids": [],
+            "path": "/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00005.jpg",
+            "width": 2972,
+            "height": 3983,
+            "file_name": "kca-benoi-contbal-030902415212-ps-00005.jpg",
+            "annotated": true,
+            "annotations": [
+                {
+                    "id": 10,
+                    "image_id": 5,
+                    "segmentation": [
+                        []
+                    ],
+                    "area": 214636,
+                    "bbox": [],
+                    "iscrowd": false,
+                    "isbbox": false,
+                    "color": "#b19e17"
+                }
+            ],
+            "num_annotations": 0
+        }
+    ]
+}

@@ -14,11 +14,13 @@ for i in range(7,10):
 
 # Iterate through images
 
-dataloader = FAAMDataset("coco-1678101495.6258435.json")
-dataloader.transform = transform=transforms.Compose([Rescale(dataloader.getAverageSize())])
-image = dataloader[4]
+dataloader = FAAMDataset("new.json")
+#dataloader.transform = transform=transforms.Compose([Rescale(dataloader.getAverageSize())])
+image = dataloader[9]
+plt.imshow(image)
+plt.savefig("image.png")
 p = Patch(dataloader, 500, 500)
-p.CreatePatchesImage(image)
+p.CreatePatchesImage(image,9)
 """
 for i in range(7,10):
     image = dataloader[i]
