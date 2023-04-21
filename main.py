@@ -1,7 +1,5 @@
 from Dataloader import *
 from toTesnor import ToTensor
-from Rescale import *
-from torchvision import transforms
 from patches import *
 # Iterate through tensors
 """
@@ -21,9 +19,14 @@ plt.imshow(image)
 plt.savefig("image.png")
 p = Patch(dataloader, 500, 500)
 p.CreatePatchesImage(image,9)
+patches = torch.load('Patches41Image.pt')
+
+p.ShowImage(patches[0]["image"], True, "ShowImageTest.png")
+
 """
 for i in range(7,10):
     image = dataloader[i]
     # Show the image using matplotlib
     plt.imshow(image.permute(1, 2, 0))
-    plt.show()"""
+    plt.show()
+"""

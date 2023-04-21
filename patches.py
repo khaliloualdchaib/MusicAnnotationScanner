@@ -1,8 +1,8 @@
 from Dataloader import *
-from Rescale import *
 import matplotlib.pyplot as plt
+from PIL import Image
 import pandas as pd
-import json
+import torch
 
 
 class Patch:
@@ -11,19 +11,23 @@ class Patch:
         self.imageheight, self.imagewidth = self.data[0].shape[1], self.data[0].shape[0]
         self.height = height
         self.width = width
+        self.patchcounter = 0
+        self.patches = {}
         self.csv = {
-            'Name':[], 
-            'PatchURL': [], 
+            'PatchID': [],
+            'Original_Image':[], 
             'TopleftX': [], 
             'TopleftY': [], 
             'BottomrightX': [],
             'BottomrightY': [],
             'Annotation': []
         }
+
+
     
     def CreatePatchesImage(self, image, index):
         self.imageheight, self.imagewidth = self.data[index].shape[1], self.data[index].shape[0]
-        counter = 0
+        #counter = 0
         for w in range(0, self.imagewidth, self.width):
             for h in range(0, self.imageheight, self.height):
                 if w + self.width >= self.imagewidth and h + self.height >= self.imageheight:
@@ -40,8 +44,6 @@ class Patch:
                     crop_bottom = h + self.height
                     crop_left = w - overlap
                     crop_top = h
-                    print(w+self.width, self.imagewidth)
-                    print(overlap)
                     
                 elif h + self.height >= self.imageheight:
                     overlap = (h+self.height) - self.imageheight
@@ -77,21 +79,27 @@ class Patch:
 
 
                 img = image[crop_left:crop_right, crop_top:crop_bottom]
-                plt.imshow(img)
-                filename = "patches/patch" + str(counter) + ".png"
-                print(filename)
-                print(crop_left,crop_right,crop_top,crop_bottom)
-                counter += 1
-                plt.savefig(filename)
-                self.csv["Name"].append("patch" + str(counter))
-                self.csv["PatchURL"].append("patches/patch" + str(counter) + ".png")
+                #plt.imshow(img)
+                #filename = "patches/patch" + str(counter) + ".png"
+                #print(filename)
+                #print(crop_left,crop_right,crop_top,crop_bottom)
+                #counter += 1
+                #plt.savefig(filename)
+                self.csv['PatchID'].append(self.patchcounter)
+                self.csv["Original_Image"].append(self.data.json["images"][index]["path"])
                 self.csv["TopleftX"].append(crop_left)
                 self.csv["TopleftY"].append(crop_top)
                 self.csv["BottomrightX"].append(crop_right)
                 self.csv["BottomrightY"].append(crop_bottom)
                 self.csv["Annotation"].append(annotation_label)
+                img_tensor = torch.from_numpy(img)
+                self.patches[self.patchcounter] = {"image": img_tensor, "annotated": annotation_label}
+                self.patchcounter += 1
+        
+        #the things here must happen in the create_patches function they are here for testing purposes
         df = pd.DataFrame(self.csv)
         df.to_csv('patches.csv')
+        torch.save(self.patches, "Patches41Image.pt")
 
     def CreatePatches(self):
         for i in range(len(self.data)):
@@ -101,3 +109,13 @@ class Patch:
         if patch_left <= segmentation[1] <= patch_right and patch_top <= segmentation[0] <= patch_bottom:
             return True
         return False
+    def ShowImage(self, Tensor_Image, save=False, file=''):
+        if save:
+            #convert image to PIL image
+            image_pil = Image.fromarray(Tensor_Image.numpy())
+            image_pil.save(file)
+        else:
+            # Convert the tensor to a numpy array
+            image_array = Tensor_Image.numpy()
+            plt.imshow(image_array)
+            plt.show()

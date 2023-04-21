@@ -1,57 +1,57 @@
-,Name,PatchURL,TopleftX,TopleftY,BottomrightX,BottomrightY,Annotation
-0,patch1,patches/patch1.png,0,0,500,500,False
-1,patch2,patches/patch2.png,0,500,500,1000,False
-2,patch3,patches/patch3.png,0,1000,500,1500,False
-3,patch4,patches/patch4.png,0,1500,500,2000,False
-4,patch5,patches/patch5.png,0,2000,500,2500,True
-5,patch6,patches/patch6.png,0,2500,500,3000,True
-6,patch7,patches/patch7.png,0,2547,500,3047,False
-7,patch8,patches/patch8.png,500,0,1000,500,False
-8,patch9,patches/patch9.png,500,500,1000,1000,True
-9,patch10,patches/patch10.png,500,1000,1000,1500,False
-10,patch11,patches/patch11.png,500,1500,1000,2000,False
-11,patch12,patches/patch12.png,500,2000,1000,2500,True
-12,patch13,patches/patch13.png,500,2500,1000,3000,False
-13,patch14,patches/patch14.png,500,2547,1000,3047,False
-14,patch15,patches/patch15.png,1000,0,1500,500,False
-15,patch16,patches/patch16.png,1000,500,1500,1000,False
-16,patch17,patches/patch17.png,1000,1000,1500,1500,False
-17,patch18,patches/patch18.png,1000,1500,1500,2000,False
-18,patch19,patches/patch19.png,1000,2000,1500,2500,True
-19,patch20,patches/patch20.png,1000,2500,1500,3000,False
-20,patch21,patches/patch21.png,1000,2547,1500,3047,False
-21,patch22,patches/patch22.png,1500,0,2000,500,False
-22,patch23,patches/patch23.png,1500,500,2000,1000,False
-23,patch24,patches/patch24.png,1500,1000,2000,1500,False
-24,patch25,patches/patch25.png,1500,1500,2000,2000,False
-25,patch26,patches/patch26.png,1500,2000,2000,2500,True
-26,patch27,patches/patch27.png,1500,2500,2000,3000,False
-27,patch28,patches/patch28.png,1500,2547,2000,3047,False
-28,patch29,patches/patch29.png,2000,0,2500,500,False
-29,patch30,patches/patch30.png,2000,500,2500,1000,False
-30,patch31,patches/patch31.png,2000,1000,2500,1500,False
-31,patch32,patches/patch32.png,2000,1500,2500,2000,True
-32,patch33,patches/patch33.png,2000,2000,2500,2500,True
-33,patch34,patches/patch34.png,2000,2500,2500,3000,True
-34,patch35,patches/patch35.png,2000,2547,2500,3047,True
-35,patch36,patches/patch36.png,2500,0,3000,500,False
-36,patch37,patches/patch37.png,2500,500,3000,1000,True
-37,patch38,patches/patch38.png,2500,1000,3000,1500,True
-38,patch39,patches/patch39.png,2500,1500,3000,2000,True
-39,patch40,patches/patch40.png,2500,2000,3000,2500,True
-40,patch41,patches/patch41.png,2500,2500,3000,3000,False
-41,patch42,patches/patch42.png,2500,2547,3000,3047,False
-42,patch43,patches/patch43.png,3000,0,3500,500,False
-43,patch44,patches/patch44.png,3000,500,3500,1000,True
-44,patch45,patches/patch45.png,3000,1000,3500,1500,True
-45,patch46,patches/patch46.png,3000,1500,3500,2000,True
-46,patch47,patches/patch47.png,3000,2000,3500,2500,True
-47,patch48,patches/patch48.png,3000,2500,3500,3000,True
-48,patch49,patches/patch49.png,3000,2547,3500,3047,False
-49,patch50,patches/patch50.png,3455,0,3955,500,False
-50,patch51,patches/patch51.png,3455,500,3955,1000,False
-51,patch52,patches/patch52.png,3455,1000,3955,1500,False
-52,patch53,patches/patch53.png,3455,1500,3955,2000,False
-53,patch54,patches/patch54.png,3455,2000,3955,2500,False
-54,patch55,patches/patch55.png,3455,2500,3955,3000,False
-55,patch56,patches/patch56.png,3455,2547,3955,3047,False
+,PatchID,Original_Image,TopleftX,TopleftY,BottomrightX,BottomrightY,Annotation
+0,0,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,0,0,500,500,False
+1,1,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,0,500,500,1000,False
+2,2,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,0,1000,500,1500,False
+3,3,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,0,1500,500,2000,False
+4,4,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,0,2000,500,2500,True
+5,5,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,0,2500,500,3000,True
+6,6,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,0,2547,500,3047,False
+7,7,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,500,0,1000,500,False
+8,8,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,500,500,1000,1000,True
+9,9,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,500,1000,1000,1500,False
+10,10,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,500,1500,1000,2000,False
+11,11,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,500,2000,1000,2500,True
+12,12,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,500,2500,1000,3000,False
+13,13,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,500,2547,1000,3047,False
+14,14,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1000,0,1500,500,False
+15,15,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1000,500,1500,1000,False
+16,16,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1000,1000,1500,1500,False
+17,17,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1000,1500,1500,2000,False
+18,18,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1000,2000,1500,2500,True
+19,19,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1000,2500,1500,3000,False
+20,20,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1000,2547,1500,3047,False
+21,21,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1500,0,2000,500,False
+22,22,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1500,500,2000,1000,False
+23,23,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1500,1000,2000,1500,False
+24,24,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1500,1500,2000,2000,False
+25,25,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1500,2000,2000,2500,True
+26,26,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1500,2500,2000,3000,False
+27,27,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,1500,2547,2000,3047,False
+28,28,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2000,0,2500,500,False
+29,29,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2000,500,2500,1000,False
+30,30,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2000,1000,2500,1500,False
+31,31,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2000,1500,2500,2000,True
+32,32,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2000,2000,2500,2500,True
+33,33,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2000,2500,2500,3000,True
+34,34,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2000,2547,2500,3047,True
+35,35,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2500,0,3000,500,False
+36,36,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2500,500,3000,1000,True
+37,37,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2500,1000,3000,1500,True
+38,38,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2500,1500,3000,2000,True
+39,39,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2500,2000,3000,2500,True
+40,40,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2500,2500,3000,3000,False
+41,41,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,2500,2547,3000,3047,False
+42,42,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3000,0,3500,500,False
+43,43,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3000,500,3500,1000,True
+44,44,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3000,1000,3500,1500,True
+45,45,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3000,1500,3500,2000,True
+46,46,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3000,2000,3500,2500,True
+47,47,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3000,2500,3500,3000,True
+48,48,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3000,2547,3500,3047,False
+49,49,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3455,0,3955,500,False
+50,50,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3455,500,3955,1000,False
+51,51,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3455,1000,3955,1500,False
+52,52,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3455,1500,3955,2000,False
+53,53,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3455,2000,3955,2500,False
+54,54,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3455,2500,3955,3000,False
+55,55,/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00017.jpg,3455,2547,3955,3047,False
