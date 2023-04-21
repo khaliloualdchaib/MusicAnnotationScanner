@@ -82,7 +82,7 @@ class Patch:
                 #plt.imshow(img)
                 #filename = "patches/patch" + str(counter) + ".png"
                 #print(filename)
-                #print(crop_left,crop_right,crop_top,crop_bottom)
+                print(crop_left,crop_right,crop_top,crop_bottom)
                 #counter += 1
                 #plt.savefig(filename)
                 self.csv['PatchID'].append(self.patchcounter)

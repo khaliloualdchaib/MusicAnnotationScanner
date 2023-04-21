@@ -20,8 +20,8 @@ plt.savefig("image.png")
 p = Patch(dataloader, 500, 500)
 p.CreatePatchesImage(image,9)
 patches = torch.load('Patches41Image.pt')
-
-p.ShowImage(patches[0]["image"], True, "ShowImageTest.png")
+print(patches)
+#p.ShowImage(patches[9]["image"], True, "ShowImageTest.png")
 
 """
 for i in range(7,10):
