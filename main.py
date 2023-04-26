@@ -1,32 +1,16 @@
-from Dataloader import *
+from FAAMDataset import *
 from toTesnor import ToTensor
 from patches import *
-# Iterate through tensors
-"""
-dataloader = FAAMDataset("coco-1678101495.6258435.json",transform=transforms.Compose([ToTensor()]))
+from PatchDataset import *
 
-for i in range(7,10):
-    image = dataloader[i]
-    print(image)
-"""
-
-# Iterate through images
-
-dataloader = FAAMDataset("new.json")
+#Put here the path to root folder
+root = 'C:\\Users\\Redux Gamer\\Documents\\MusicAnnotationScanner'
+#dataset = FAAMDataset("new.json")
 #dataloader.transform = transform=transforms.Compose([Rescale(dataloader.getAverageSize())])
-image = dataloader[9]
-plt.imshow(image)
-plt.savefig("image.png")
-p = Patch(dataloader, 500, 500)
-p.CreatePatchesImage(image,9)
-patches = torch.load('Patches41Image.pt')
-print(patches)
-#p.ShowImage(patches[9]["image"], True, "ShowImageTest.png")
+#p = Patch(dataset, 500, 500, root)
+#p.CreatePatches()
+#print(patches)
+#p.ShowImage(patches["image"], True, "ShowImageTest.png")
 
-"""
-for i in range(7,10):
-    image = dataloader[i]
-    # Show the image using matplotlib
-    plt.imshow(image.permute(1, 2, 0))
-    plt.show()
-"""
+data = PatchDataset("Patches.csv")
+data.ShowImage(data[0][0])
