@@ -1,0 +1,165 @@
+import torch
+from tqdm import tqdm
+import numpy as np
+class MLPipeline:
+    def __init__(self, network, device, loss, optimizer) -> None:
+        self.network = network
+        self.device = device
+        self.loss = loss
+        self.optimizer = optimizer
+    ### Training function
+    def train(self, training_set):
+        ##  creating list to hold loss per batch
+        loss_per_batch = []
+
+        for images, labels in tqdm(training_set):
+            
+            #  sending images to device
+            images, labels = images.to(torch.float32).to(self.device), labels.to(self.device)
+            
+            #  classifying instances
+            images = images.permute(0, 3, 1, 2)
+            classifications = self.network(images)
+
+            #  computing loss/how wrong our classifications are
+            loss = self.loss(classifications, images)
+            loss_per_batch.append(loss.item())
+
+            #  zeroing optimizer gradients
+            self.optimizer.zero_grad()
+
+            #  computing gradients/the direction that fits our objective
+            loss.backward()
+
+            #  optimizing weights/slightly adjusting parameters
+            self.optimizer.step()
+            #print('\t partial train loss (single batch): %f' % (loss.data))
+
+        print('Done!')
+
+        return loss_per_batch
+
+
+    def validate(self, validation_loader):
+        """
+        This function validates convnet parameter optimizations
+        """
+        #  creating a list to hold loss per batch
+        loss_per_batch = []
+
+        #  preventing gradient calculations since we will not be optimizing
+        with torch.no_grad():
+        #  iterating through batches
+            for images, labels in tqdm(validation_loader):
+                #--------------------------------------
+                #  sending images and labels to device
+                #--------------------------------------
+                images, labels = images.to(self.device), labels.to(self.device)
+
+                #--------------------------
+                #  making classsifications
+                #--------------------------
+                classifications = self.network(images)
+
+                #-----------------
+                #  computing loss
+                #-----------------
+                loss = self.loss(classifications, images)
+                loss_per_batch.append(loss.item())
+                #print('\t partial train loss (single batch): %f' % (loss.data))
+
+        print('Done!')
+        return loss_per_batch
+
+    def accuracy(self, dataloader):
+        """
+        This function computes accuracy
+        """
+        #  setting model state
+        self.network.eval()
+
+        network_accuracy = 0
+
+        #  iterating through batches
+        with torch.no_grad():
+            for images, labels in tqdm(dataloader):
+                images, labels = images.to(torch.float32).to(self.device), labels.to(self.device)
+
+                # Flatten the input and output tensors
+                images = images.permute(0, 3, 1, 2)
+                outputs_flat = (self.network(images)).view(-1)
+                inputs_flat = images.reshape(-1)    
+
+                # Calculate the mean squared error between the input and output tensors
+                mse = torch.mean(torch.square(outputs_flat - inputs_flat)) # Question input - output
+                #print("Mse",mse)
+                # Calculate the accuracy as the percentage of pixels that are accurately reconstructed
+                accuracy = 100 * (1 - mse) # Question / torch.mean(torch.square(inputs_flat)))
+                #print("accuracy",accuracy)
+                network_accuracy += accuracy
+        network_accuracy /= len(dataloader)
+        numpy_network_accuracy = network_accuracy.cpu().numpy()
+
+        return numpy_network_accuracy
+
+    def train_epochs(self, epochs, training_set, saveModel=False, validation_set=None):
+
+        #  creating log
+        log_dict = {
+            'training_loss_per_batch': [],
+            'validation_loss_per_batch': [],
+            'training_accuracy_per_epoch': [],
+            'validation_accuracy_per_epoch': []
+        } 
+
+        self.network.train()
+
+        for epoch in range(epochs):
+            print(f'Epoch {epoch+1}/{epochs}')
+            train_losses = []
+
+            # training
+            print('Training...')
+            loss_per_batch_train = self.train(training_set)
+
+            for i in loss_per_batch_train:
+                log_dict['training_loss_per_batch'].append(i)
+                train_losses.append(i)
+
+            print('Deriving training accuracy...')
+            #  computing training accuracy
+            train_accuracy = self.accuracy(training_set)
+            log_dict['training_accuracy_per_epoch'].append(train_accuracy)
+
+            #  validation
+            #print('Validating...')
+            #val_losses = []
+
+            #  setting convnet to evaluation mode
+            #self.network.eval()
+
+            #loss_per_batch_validation = self.validate(validation_set)
+            
+            #for i in loss_per_batch_validation:
+                #log_dict['validation_loss_per_batch'].append(i)
+                #val_losses.append(i)
+
+            #print('deriving validation accuracy...')
+            #val_accuracy = self.accuracy(validation_set)
+            #log_dict['validation_accuracy_per_epoch'].append(val_accuracy)
+
+            #
+            # 
+            # 
+            # 
+            # 
+            # train_losses = np.array(train_losses).mean()
+            #val_losses = np.array(val_losses).mean()
+
+            #print(f'training_loss: {round(train_losses, 4)}  training_accuracy: '+
+            #f'{train_accuracy}  validation_loss: {round(val_losses, 4)} '+  
+            #f'validation_accuracy: {val_accuracy}\n')
+        if saveModel:
+            PATH = './autoencoder.pth'
+            torch.save(self.network.state_dict(), PATH)
+        return log_dict

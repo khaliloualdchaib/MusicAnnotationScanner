@@ -21,11 +21,10 @@ class PatchDataset(Dataset):
         if filtered_df.empty:
             return "EMPTY"
         path = "Patches/" + filtered_df["OriginalImageID"].astype(str).iloc[0] + "/" + str(patchID) + ".png"
-        img = Image.open(path)
-        img_array = np.array(img)
-        img.close()
-        img_tensor = torch.tensor(img_array)
-        return img_tensor, filtered_df["Annotation"].iloc[0]
+        img = io.imread(path)
+        img.transpose(2, 0, 1)
+        img = torch.from_numpy(img)
+        return img, filtered_df["Annotation"].iloc[0]
     def ShowImage(self, Tensor_Image):
         # Convert the tensor to a numpy array
         image_array = Tensor_Image.numpy()
