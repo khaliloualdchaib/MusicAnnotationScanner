@@ -23,6 +23,8 @@ class Patch:
             'BottomrightY': [],
             'Annotation': []
         }
+        self.clean = []
+        self.annotated = []
 
 
     
@@ -67,16 +69,18 @@ class Patch:
                 annotations_image = self.data.json["images"][index]["annotations"]
                 if(len(annotations_image) == 0):
                     annotation_label = False
+                    return
                 else:
                     for annotation in annotations_image:
                         segmentations = annotation["segmentation"][0]
-                        if annotation_label == True:
+                        if annotation_label == True: #annotated
                             break
 
                         for i in range(0,len(segmentations),2):
                             segmentation = [segmentations[i],segmentations[i+1]]
+                            print(segmentation,crop_left,crop_top,crop_right,crop_bottom)
                             if self.is_segmentation_in_patch(segmentation,crop_left,crop_top,crop_right,crop_bottom):
-                                annotation_label = True                                
+                                annotation_label = True #annotated                             
                                 break
                             else:
                                 annotation_label = False
@@ -94,7 +98,11 @@ class Patch:
                 self.csv["BottomrightY"].append(crop_bottom)
                 self.csv["Annotation"].append(annotation_label)
                 #img_tensor = torch.from_numpy(img).to(torch.uint8)
-                plt.imsave(folder_path+'/'+str(self.patchcounter) + '.png', img)
+                #plt.imsave(folder_path+'/'+str(self.patchcounter) + '.png', img)
+                if(annotation_label == True):
+                    self.annotated.append(self.patchcounter)
+                else:
+                    self.clean.append(self.patchcounter)
 
                 #label = 0
                 #if annotation_label:
