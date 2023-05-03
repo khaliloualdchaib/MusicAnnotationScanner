@@ -1,6 +1,8 @@
 import torch
 from tqdm import tqdm
 import numpy as np
+import matplotlib.pyplot as plt
+
 class MLPipeline:
     def __init__(self, network, device, loss, optimizer) -> None:
         self.network = network
@@ -8,15 +10,12 @@ class MLPipeline:
         self.loss = loss
         self.optimizer = optimizer
     ### Training function
-    def train(self, training_set):
+    def train(self, training_loader):
         ##  creating list to hold loss per batch
         loss_per_batch = []
-
-        for images, labels in tqdm(training_set):
-            
+        for images, labels in tqdm(training_loader):
             #  sending images to device
             images, labels = images.to(torch.float32).to(self.device), labels.to(self.device)
-            
             #  classifying instances
             images = images.permute(0, 3, 1, 2)
             classifications = self.network(images)
@@ -54,7 +53,9 @@ class MLPipeline:
                 #--------------------------------------
                 #  sending images and labels to device
                 #--------------------------------------
-                images, labels = images.to(self.device), labels.to(self.device)
+                images, labels = images.to(torch.float32).to(self.device), labels.to(self.device)
+                
+                images = images.permute(0, 3, 1, 2)
 
                 #--------------------------
                 #  making classsifications
@@ -102,7 +103,7 @@ class MLPipeline:
 
         return numpy_network_accuracy
 
-    def train_epochs(self, epochs, training_set, saveModel=False, validation_set=None):
+    def train_epochs(self, epochs, training_set, validation_set, saveModel=False):
 
         #  creating log
         log_dict = {
@@ -132,34 +133,45 @@ class MLPipeline:
             log_dict['training_accuracy_per_epoch'].append(train_accuracy)
 
             #  validation
-            #print('Validating...')
-            #val_losses = []
+            print('Validating...')
+            val_losses = []
 
             #  setting convnet to evaluation mode
-            #self.network.eval()
+            self.network.eval()
 
-            #loss_per_batch_validation = self.validate(validation_set)
+            loss_per_batch_validation = self.validate(validation_set)
             
-            #for i in loss_per_batch_validation:
-                #log_dict['validation_loss_per_batch'].append(i)
-                #val_losses.append(i)
+            for i in loss_per_batch_validation:
+                log_dict['validation_loss_per_batch'].append(i)
+                val_losses.append(i)
 
-            #print('deriving validation accuracy...')
-            #val_accuracy = self.accuracy(validation_set)
-            #log_dict['validation_accuracy_per_epoch'].append(val_accuracy)
+            print('deriving validation accuracy...')
+            val_accuracy = self.accuracy(validation_set)
+            log_dict['validation_accuracy_per_epoch'].append(val_accuracy)
+ 
+            train_losses = np.array(train_losses).mean()
+            val_losses = np.array(val_losses).mean()
 
-            #
-            # 
-            # 
-            # 
-            # 
-            # train_losses = np.array(train_losses).mean()
-            #val_losses = np.array(val_losses).mean()
-
-            #print(f'training_loss: {round(train_losses, 4)}  training_accuracy: '+
-            #f'{train_accuracy}  validation_loss: {round(val_losses, 4)} '+  
-            #f'validation_accuracy: {val_accuracy}\n')
+            print(f'training_loss: {round(train_losses, 4)}  training_accuracy: '+
+            f'{train_accuracy}  validation_loss: {round(val_losses, 4)} '+  
+            f'validation_accuracy: {val_accuracy}\n')
         if saveModel:
             PATH = './autoencoder.pth'
             torch.save(self.network.state_dict(), PATH)
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
+        # plot the training and validation loss
+        ax[0].plot(log_dict['training_loss_per_batch'], label='Training Loss')
+        ax[0].plot(log_dict['validation_loss_per_batch'], label='Validation Loss')
+        ax[0].set_xlabel('Batch')
+        ax[0].set_ylabel('Loss')
+        ax[0].legend()
+
+        # plot the training and validation accuracy
+        ax[1].plot(log_dict['training_accuracy_per_epoch'], label='Training Accuracy')
+        ax[1].plot(log_dict['validation_accuracy_per_epoch'], label='Validation Accuracy')
+        ax[1].set_xlabel('Epoch')
+        ax[1].set_ylabel('Accuracy')
+        ax[1].legend()
+        # show the plot
+        plt.show()
         return log_dict

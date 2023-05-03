@@ -1,27 +1,22 @@
 from FAAMDataset import *
-from toTesnor import ToTensor
 from patches import *
 from PatchDataset import *
+import json
 
 import csv # for def Datasplitting
 import math # for def Datasplitting
 import random # for def Datasplitting
 
+
 #Put here the path to root folder
 root = os.getcwd()
 dataset = FAAMDataset("new.json")
-#dataset.transform = transform=transforms.Compose([Rescale(dataset.getAverageSize())])
 patch_width = 500
 patch_height = 500
 #p = Patch(dataset, patch_height, patch_width, root)
 #p.CreatePatches()
-#p.CreatePatchesImage(dataset[3],3)
-#print(p)
-#p.ShowImage(patches["image"], True, "ShowImageTest.png")
+#data = PatchDataset("Patches.csv")
 
-data = PatchDataset("Patches.csv")
-
-#data.ShowImage(data[0][0])
 """
 clean = 0
 not_clean = 0
@@ -42,7 +37,7 @@ print(not_clean)
 """
 
 
-def Datasplitting(trainingpercentage, testingpercentage, validationpercentage,patchdataset, dataset, cleansize = 8504, annotatedsize = 2962):
+def Datasplitting(trainingpercentage, testingpercentage, validationpercentage, dataset, cleansize = 8504, annotatedsize = 2962):
     totalsize = cleansize + annotatedsize # totalsize of patches
     validationsize = floor(totalsize * validationpercentage)
     testingsize = floor(totalsize * testingpercentage)
@@ -81,7 +76,6 @@ def Datasplitting(trainingpercentage, testingpercentage, validationpercentage,pa
     Training_dataset = {}
     Testing_dataset = {}
     Validation_dataset = {}
-
     #### CREATE TRAINING DATASET
     for i in clean:    
         amount_patches_vertical = dataset[int(i)].shape[1] / patch_height
@@ -140,6 +134,14 @@ def Datasplitting(trainingpercentage, testingpercentage, validationpercentage,pa
             source = Patches_path + i + "\\" + j + ".png"
             destination = validation_path + j + ".png"
             os.rename(source,destination)
+    #get list of all patches for each set
+    TrainingList = [patchid for list in Training_dataset.values() for patchid in list]
+    TestingList = [patchid for list in Testing_dataset.values() for patchid in list]
+    ValidationList = [patchid for list in Validation_dataset.values() for patchid in list]
+    file = {"Training": TrainingList, "Testing": TestingList, "Validation": ValidationList}
+    #Making the json file
+    with open("DataSplit.json", "w") as f:
+        json.dump(file, f)
 
 
 
@@ -147,7 +149,7 @@ def Datasplitting(trainingpercentage, testingpercentage, validationpercentage,pa
 
 
 
-Datasplitting(0.40,0.40,0.20,data,dataset)
+Datasplitting(0.60,0.20,0.20,dataset)
 
 
 

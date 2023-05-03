@@ -1,3 +1,6 @@
 datasets/
-Patches
+Patches/
 __pycache__
+Testing/
+Training/
+Validation/

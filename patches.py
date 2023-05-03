@@ -98,18 +98,12 @@ class Patch:
                 self.csv["BottomrightY"].append(crop_bottom)
                 self.csv["Annotation"].append(annotation_label)
                 #img_tensor = torch.from_numpy(img).to(torch.uint8)
-                #plt.imsave(folder_path+'/'+str(self.patchcounter) + '.png', img)
+                plt.imsave(folder_path+'/'+str(self.patchcounter) + '.png', img)
                 if(annotation_label == True):
                     self.annotated.append(self.patchcounter)
                 else:
                     self.clean.append(self.patchcounter)
-
-                #label = 0
-                #if annotation_label:
-                    #label = 1
-                #patch = {"image": img_tensor, "annotated": label}
                 self.patchcounter += 1
-                #torch.save(patch, folder_path + "/" + str(self.patchcounter) + ".pt")
     def CreatePatches(self):
         for i in range(len(self.data)):
             self.CreatePatchesImage(self.data[i], i)

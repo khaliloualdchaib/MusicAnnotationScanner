@@ -1,40 +1,32 @@
 import torch
 import pandas as pd
-from skimage import io, transform
-import numpy as np
+from skimage import io
 import matplotlib.pyplot as plt
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms, utils
-from PIL import Image
-import os
+from torch.utils.data import Dataset
+import json
 
 class PatchDataset(Dataset):
-    def __init__(self, csv_file, transform=None) -> None:
+    def __init__(self, csv_file, DataSplitJSON, type, transform=None) -> None:
         super().__init__()
         self.transform = transform
         self.df = pd.read_csv(csv_file)
+        self.type = type
+        with open(DataSplitJSON, "r") as f:
+            self.json = json.load(f)
     def __len__(self):
-        return self.df.shape[0]
+        return len(self.json[self.type])
     
-    def __getitem__(self, patchID):
+    def __getitem__(self, idx):
+        patchID = int(self.json[self.type][idx])
         filtered_df = self.df[(self.df["PatchID"] == patchID)]
         if filtered_df.empty:
-            return "EMPTY"
-        path = "Patches/" + filtered_df["OriginalImageID"].astype(str).iloc[0] + "/" + str(patchID) + ".png"
-<<<<<<< Updated upstream
+            return "EMPTY"    
+        path = self.type + "/" + str(patchID) + ".png"
         img = io.imread(path)
         img.transpose(2, 0, 1)
         img = torch.from_numpy(img)
         return img, filtered_df["Annotation"].iloc[0]
-=======
-        img = Image.open(path)
-        img_array = np.array(img)
-        img.close()
-        img_tensor = torch.tensor(img_array)
-        return img_tensor, filtered_df["Annotation"].iloc[0]
-    
->>>>>>> Stashed changes
-    def ShowImage(self, Tensor_Image):
+def ShowImage(self, Tensor_Image):
         # Convert the tensor to a numpy array
         image_array = Tensor_Image.numpy()
         plt.imshow(image_array)
