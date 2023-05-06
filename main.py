@@ -2,6 +2,7 @@ from FAAMDataset import *
 from patches import *
 from PatchDataset import *
 import json
+from normalize import Normalize
 
 import csv # for def Datasplitting
 import math # for def Datasplitting
@@ -10,12 +11,14 @@ import random # for def Datasplitting
 
 #Put here the path to root folder
 root = os.getcwd()
-dataset = FAAMDataset("new.json")
+#dataset = FAAMDataset("new.json")
 patch_width = 500
 patch_height = 500
 #p = Patch(dataset, patch_height, patch_width, root)
 #p.CreatePatches()
 #data = PatchDataset("Patches.csv")
+n = Normalize("DataSplit.json")
+n.normalize_images()
 
 """
 clean = 0
@@ -37,17 +40,10 @@ print(not_clean)
 """
 
 
+
+
 def Datasplitting(trainingpercentage, testingpercentage, validationpercentage, dataset, cleansize = 8504, annotatedsize = 2962):
     totalsize = cleansize + annotatedsize # totalsize of patches
-    validationsize = floor(totalsize * validationpercentage)
-    testingsize = floor(totalsize * testingpercentage)
-    trainingsize = floor(totalsize * trainingpercentage)
-    images = len(dataset)
-    print("totalsize", totalsize)
-    print("trainingsize",trainingsize)
-    print("testingsize",testingsize)
-    print("validationsize",validationsize)
-    print("images",images)
 
     # Create lists this should be made in patches.py for less computation
 
@@ -149,7 +145,7 @@ def Datasplitting(trainingpercentage, testingpercentage, validationpercentage, d
 
 
 
-Datasplitting(0.60,0.20,0.20,dataset)
+#Datasplitting(0.60,0.20,0.20,dataset)
 
 
 
