@@ -21,21 +21,22 @@ class PatchDataset(Dataset):
         filtered_df = self.df[(self.df["PatchID"] == patchID)]
         if filtered_df.empty:
             return "EMPTY"    
-        path = self.type + "/" + str(patchID) + ".png"
-        img = io.imread(path)
+        path = self.type + "/" + str(patchID) + ".pt"
+        img = torch.load(path)
         if self.transform:
             img = self.transform(img)
-
         #img.transpose(2, 0, 1) # Happens in self.transform
         #img = torch.from_numpy(img) # Happens in self.transform
         ############################
         #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         #img = img.to(device)  # Move the tensor to the GPU or CPU
         ############################
-
+        img = img.permute(1, 2, 0)
         return img, filtered_df["Annotation"].iloc[0]
-def ShowImage(self, Tensor_Image):
+    def ShowImage(self, Tensor_Image):
         # Convert the tensor to a numpy array
         image_array = Tensor_Image.numpy()
+        if image_array.shape[0] == 4:
+            image_array = image_array[:3, :, :]
         plt.imshow(image_array)
         plt.show()

@@ -3,6 +3,7 @@ from patches import *
 from PatchDataset import *
 import json
 from normalize import Normalize
+from toTensor import ToTensor
 
 import csv # for def Datasplitting
 import math # for def Datasplitting
@@ -11,7 +12,7 @@ import random # for def Datasplitting
 
 #Put here the path to root folder
 root = os.getcwd()
-#dataset = FAAMDataset("new.json")
+dataset = FAAMDataset("new.json", transform=transforms.Compose([ToTensor()]))
 patch_width = 500
 patch_height = 500
 #p = Patch(dataset, patch_height, patch_width, root)

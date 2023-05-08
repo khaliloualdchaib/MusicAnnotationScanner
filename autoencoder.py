@@ -11,7 +11,7 @@ class Autoencoder(nn.Module):
 
         #Convolutional layers
         self.encoder_cl = nn.Sequential(
-            nn.Conv2d(4,8,3,stride=2, padding=1),
+            nn.Conv2d(3,8,3,stride=2, padding=1),
             nn.ReLU(True),
             nn.Conv2d(8,16,3,stride=2, padding=1),
             nn.ReLU(True),
@@ -24,7 +24,7 @@ class Autoencoder(nn.Module):
             nn.ReLU(True),
             nn.ConvTranspose2d(16, 8, 3, stride=2, padding=1, output_padding=1),
             nn.ReLU(True),
-            nn.ConvTranspose2d(8, 4, 3, stride=2, padding=1, output_padding=1)
+            nn.ConvTranspose2d(8, 3, 3, stride=2, padding=1, output_padding=1)
         )
 
         

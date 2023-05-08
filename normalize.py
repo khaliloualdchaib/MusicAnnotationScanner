@@ -3,6 +3,7 @@ import numpy as np
 import torch
 import os
 from skimage import io
+import torchvision.transforms as transforms
 
 class Normalize:
 
@@ -17,19 +18,10 @@ class Normalize:
                 img_path = path + j + ".png"
                 img = io.imread(img_path)
                 arr = np.array(img)
-                """
-                Linear normalization
-                http://en.wikipedia.org/wiki/Normalization_%28image_processing%29
-                """
-                # Do not touch the alpha channel
-                for i in range(3):
-                    minval = arr[...,i].min()
-                    maxval = arr[...,i].max()
-                    if minval != maxval:
-                        arr[...,i] -= minval
-                        arr[...,i] = arr[...,i] * (255.0/(maxval-minval))
-                        
-                arr.transpose(2,0,1)
-                arr = torch.from_numpy(arr)
+                tensor_img = transforms.ToTensor()(arr)
+                
+                mean=[0.485, 0.456, 0.406, 0.0]
+                std=[0.229, 0.224, 0.225, 1.0]
+                normalized_tensor_img = transforms.Normalize(mean=mean, std=std)(tensor_img)
                 pt_path = path + j + '.pt'
-                torch.save(arr, pt_path)
+                torch.save(normalized_tensor_img, pt_path)
