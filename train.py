@@ -8,6 +8,7 @@ from toTensor import ToTensor
 from torchvision import transforms
 
 trainingdata = PatchDataset("Patches.csv", "DataSplit.json", "Training")
+#print(len(trainingdata))
 testdata = PatchDataset("Patches.csv", "DataSplit.json", "Testing")
 validationdata = PatchDataset("Patches.csv", "DataSplit.json", "Validation")
 batch_size = 16
@@ -36,4 +37,4 @@ optim = torch.optim.Adam(model.parameters(), lr=lr)
 
 
 pipeline = MLPipeline(model, device, loss_fn, optim)
-log_dict = pipeline.train_epochs(1,training_loader, validation_loader)
+log_dict = pipeline.train_epochs(10,training_loader, validation_loader)

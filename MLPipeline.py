@@ -107,8 +107,8 @@ class MLPipeline:
 
         #  creating log
         log_dict = {
-            'training_loss_per_batch': [],
-            'validation_loss_per_batch': [],
+            'training_loss_per_epoch': [],
+            'validation_loss_per_epoch': [],
             'training_accuracy_per_epoch': [],
             'validation_accuracy_per_epoch': []
         } 
@@ -122,9 +122,7 @@ class MLPipeline:
             # training
             print('Training...')
             loss_per_batch_train = self.train(training_set)
-
             for i in loss_per_batch_train:
-                log_dict['training_loss_per_batch'].append(i)
                 train_losses.append(i)
 
             print('Deriving training accuracy...')
@@ -142,7 +140,6 @@ class MLPipeline:
             loss_per_batch_validation = self.validate(validation_set)
             
             for i in loss_per_batch_validation:
-                log_dict['validation_loss_per_batch'].append(i)
                 val_losses.append(i)
 
             print('deriving validation accuracy...')
@@ -150,8 +147,9 @@ class MLPipeline:
             log_dict['validation_accuracy_per_epoch'].append(val_accuracy)
  
             train_losses = np.array(train_losses).mean()
+            log_dict['training_loss_per_epoch'].append(train_losses)
             val_losses = np.array(val_losses).mean()
-
+            log_dict['validation_loss_per_epoch'].append(val_losses)
             print(f'training_loss: {round(train_losses, 4)}  training_accuracy: '+
             f'{train_accuracy}  validation_loss: {round(val_losses, 4)} '+  
             f'validation_accuracy: {val_accuracy}\n')
@@ -160,8 +158,8 @@ class MLPipeline:
             torch.save(self.network.state_dict(), PATH)
         fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
         # plot the training and validation loss
-        ax[0].plot(log_dict['training_loss_per_batch'], label='Training Loss')
-        ax[0].plot(log_dict['validation_loss_per_batch'], label='Validation Loss')
+        ax[0].plot(log_dict['training_loss_per_epoch'], label='Training Loss')
+        ax[0].plot(log_dict['validation_loss_per_epoch'], label='Validation Loss')
         ax[0].set_xlabel('Batch')
         ax[0].set_ylabel('Loss')
         ax[0].legend()
