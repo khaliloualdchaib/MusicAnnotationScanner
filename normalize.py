@@ -4,6 +4,7 @@ import torch
 import os
 from skimage import io
 import torchvision.transforms as transforms
+from tqdm import tqdm
 
 class Normalize:
 
@@ -14,14 +15,14 @@ class Normalize:
     def normalize_images(self):
         for i in self.json:
             path = os.getcwd() + "\\" + i + "\\"
-            for j in self.json[i]:
+            for j in tqdm(self.json[i], desc="Normalizing " + str(i) + " set"):
                 img_path = path + j + ".png"
                 img = io.imread(img_path)
-                arr = np.array(img)
-                tensor_img = transforms.ToTensor()(arr)
-                
-                mean=[0.485, 0.456, 0.406, 0.0]
-                std=[0.229, 0.224, 0.225, 1.0]
+                if img.shape[-1] == 4:
+                    img = img[ :, :, :3]
+                tensor_img = transforms.ToTensor()(img)
+                mean=[0.485, 0.456, 0.406]
+                std=[0.229, 0.224, 0.225]
                 normalized_tensor_img = transforms.Normalize(mean=mean, std=std)(tensor_img)
                 pt_path = path + j + '.pt'
                 torch.save(normalized_tensor_img, pt_path)
