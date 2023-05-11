@@ -7,11 +7,9 @@ import torchvision.transforms as transforms
 from tqdm import tqdm
 
 class Normalize:
-
     def __init__(self,DataSplitJSON) -> None:
          with open(DataSplitJSON, "r") as f:
             self.json = json.load(f)
-
     def normalize_images(self):
         for i in self.json:
             path = os.getcwd() + "\\" + i + "\\"
