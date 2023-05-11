@@ -25,13 +25,15 @@ class PatchDataset(Dataset):
         img = torch.load(path)
         if self.transform:
             img = self.transform(img)
-        #img.transpose(2, 0, 1) # Happens in self.transform
+        #img.transpose(1,2,0) # Happens in self.transform
+        #img = img[:, :, :3]
         #img = torch.from_numpy(img) # Happens in self.transform
         ############################
         #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         #img = img.to(device)  # Move the tensor to the GPU or CPU
         ############################
         img = img.permute(1, 2, 0)
+        img = img[:, :, :3]
         return img, filtered_df["Annotation"].iloc[0]
     def ShowImage(self, Tensor_Image):
         # Convert the tensor to a numpy array

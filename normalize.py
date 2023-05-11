@@ -18,11 +18,9 @@ class Normalize:
             for j in tqdm(self.json[i], desc="Normalizing " + str(i) + " set"):
                 img_path = path + j + ".png"
                 img = io.imread(img_path)
-                if img.shape[-1] == 4:
-                    img = img[ :, :, :3]
                 tensor_img = transforms.ToTensor()(img)
-                mean=[0.485, 0.456, 0.406]
-                std=[0.229, 0.224, 0.225]
+                mean=[0.485, 0.456, 0.406,0.0]
+                std=[0.229, 0.224, 0.225,1.0]
                 normalized_tensor_img = transforms.Normalize(mean=mean, std=std)(tensor_img)
                 pt_path = path + j + '.pt'
                 torch.save(normalized_tensor_img, pt_path)

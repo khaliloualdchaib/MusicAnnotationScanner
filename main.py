@@ -12,7 +12,7 @@ import random # for def Datasplitting
 
 #Put here the path to root folder
 root = os.getcwd()
-dataset = FAAMDataset("new.json", transform=transforms.Compose([ToTensor()]))
+dataset = FAAMDataset("new.json")
 patch_width = 500
 patch_height = 500
 #p = Patch(dataset, patch_height, patch_width, root)
