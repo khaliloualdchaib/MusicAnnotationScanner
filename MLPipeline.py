@@ -160,7 +160,7 @@ class MLPipeline:
         # plot the training and validation loss
         ax[0].plot(log_dict['training_loss_per_epoch'], label='Training Loss')
         ax[0].plot(log_dict['validation_loss_per_epoch'], label='Validation Loss')
-        ax[0].set_xlabel('Batch')
+        ax[0].set_xlabel('Epoch')
         ax[0].set_ylabel('Loss')
         ax[0].legend()
 

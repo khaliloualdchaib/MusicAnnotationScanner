@@ -11,7 +11,7 @@ trainingdata = PatchDataset("Patches.csv", "DataSplit.json", "Training")
 #print(len(trainingdata))
 testdata = PatchDataset("Patches.csv", "DataSplit.json", "Testing")
 validationdata = PatchDataset("Patches.csv", "DataSplit.json", "Validation")
-batch_size = 32
+batch_size = 16
 #trainingdata.ShowImage(trainingdata[0][0])
 
 training_loader = DataLoader(trainingdata, batch_size=batch_size)
@@ -37,4 +37,4 @@ optim = torch.optim.Adam(model.parameters(), lr=lr)
 
 
 pipeline = MLPipeline(model, device, loss_fn, optim)
-log_dict = pipeline.train_epochs(70,training_loader, validation_loader)
+log_dict = pipeline.train_epochs(70,training_loader, validation_loader,True)
