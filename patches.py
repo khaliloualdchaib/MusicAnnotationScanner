@@ -78,7 +78,7 @@ class Patch:
 
                         for i in range(0,len(segmentations),2):
                             segmentation = [segmentations[i],segmentations[i+1]]
-                            print(segmentation,crop_left,crop_top,crop_right,crop_bottom)
+                            #print(segmentation,crop_left,crop_top,crop_right,crop_bottom)
                             if self.is_segmentation_in_patch(segmentation,crop_left,crop_top,crop_right,crop_bottom):
                                 annotation_label = True #annotated                             
                                 break

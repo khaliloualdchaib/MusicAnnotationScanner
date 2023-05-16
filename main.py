@@ -25,16 +25,13 @@ def dataPrep():
     Datasplitting(0.60,0.20,0.20,dataset, patch_height=patch_height, patch_width=patch_width)
     n = Normalize("PatchData/DataSplit.json")
     n.normalize_images()
-dataPrep()
 print("Data prep finished")
-sys.exit()
 #-------------------------------------------------- Model Training -------------------------------------------------------------------------
 
 ##################### DATA LOADING #####################################
-trainingdata = PatchDataset("Patches.csv", "DataSplit.json", "Training")
-#print(len(trainingdata))
-testdata = PatchDataset("Patches.csv", "DataSplit.json", "Testing")
-validationdata = PatchDataset("Patches.csv", "DataSplit.json", "Validation")
+trainingdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Training")
+testdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Testing")
+validationdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Validation")
 batch_size = 16
 training_loader = DataLoader(trainingdata, batch_size=batch_size)
 testing_loader = DataLoader(testdata, batch_size=batch_size)
