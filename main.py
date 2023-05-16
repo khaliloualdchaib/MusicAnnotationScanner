@@ -1,153 +1,61 @@
-from FAAMDataset import *
+from custom_datasets.FAAMDataset import *
 from patches import *
-from PatchDataset import *
-import json
-from normalize import Normalize
-from toTensor import ToTensor
+from custom_datasets.PatchDataset import *
+from dataTransformation.normalize import Normalize
+from dataTransformation.toTensor import ToTensor
+from ML.autoencoder import *
+from ML.MLPipeline import *
+from custom_datasets.PatchDataset import *
+from torch.utils.data import DataLoader
+from ML.MLPipeline import * 
+from torchvision import transforms
+from datasplit import Datasplitting
+import sys
 
-import csv # for def Datasplitting
-import math # for def Datasplitting
-import random # for def Datasplitting
 
-
+#-------------------------------------------------- DATA PREP -------------------------------------------------------------------------
 #Put here the path to root folder
 root = os.getcwd()
-dataset = FAAMDataset("new.json")
+dataset = FAAMDataset("jsonfiles/new.json")
 patch_width = 500
 patch_height = 500
-#p = Patch(dataset, patch_height, patch_width, root)
-#p.CreatePatches()
-#data = PatchDataset("Patches.csv")
-n = Normalize("DataSplit.json")
-n.normalize_images()
+def dataPrep():
+    p = Patch(dataset, patch_height, patch_width, root)
+    p.CreatePatches()
+    Datasplitting(0.60,0.20,0.20,dataset, patch_height=patch_height, patch_width=patch_width)
+    n = Normalize("PatchData/DataSplit.json")
+    n.normalize_images()
+dataPrep()
+print("Data prep finished")
+sys.exit()
+#-------------------------------------------------- Model Training -------------------------------------------------------------------------
 
-"""
-clean = 0
-not_clean = 0
+##################### DATA LOADING #####################################
+trainingdata = PatchDataset("Patches.csv", "DataSplit.json", "Training")
+#print(len(trainingdata))
+testdata = PatchDataset("Patches.csv", "DataSplit.json", "Testing")
+validationdata = PatchDataset("Patches.csv", "DataSplit.json", "Validation")
+batch_size = 16
+training_loader = DataLoader(trainingdata, batch_size=batch_size)
+testing_loader = DataLoader(testdata, batch_size=batch_size)
+validation_loader = DataLoader(validationdata, batch_size=batch_size)
 
-for i in range(len(data)):
-    print(data[i][1])
-    if data[i][1] == 0:
-        clean +=1
-        print("Clean")
-    else:
-        not_clean+=1
-        print("Annotated")
+##################### PARAMETERS #####################################
+# Check if the GPU is available
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
+model = Autoencoder()
 
+model.to(device)
 
-print(clean)
-print(not_clean)
-"""
+loss_fn = torch.nn.MSELoss()
+lr= 0.001
 
+### Set the random seed for reproducible results
+torch.manual_seed(0)
 
+optim = torch.optim.Adam(model.parameters(), lr=lr)
 
-
-def Datasplitting(trainingpercentage, testingpercentage, validationpercentage, dataset, cleansize = 8504, annotatedsize = 2962):
-    totalsize = cleansize + annotatedsize # totalsize of patches
-
-    # Create lists this should be made in patches.py for less computation
-
-    clean = {}
-    annotated = {}
-
-    with open('patches.csv', 'r') as file: # need to get as parameter
-        reader = csv.DictReader(file)
-        for row in reader:
-            if row["Annotation"] == "True":
-                if(row["OriginalImageID"] in annotated):
-                    annotated[row["OriginalImageID"]].append(row["PatchID"])
-                else:
-                    annotated[row["OriginalImageID"]] = [row["PatchID"]]
-            else:
-                if(row["OriginalImageID"] in clean):
-                    clean[row["OriginalImageID"]].append(row["PatchID"])
-                else:
-                    clean[row["OriginalImageID"]] = [row["PatchID"]]
-
-    #print("annotated",annotated)
-
-
-    
-
-    Training_dataset = {}
-    Testing_dataset = {}
-    Validation_dataset = {}
-    #### CREATE TRAINING DATASET
-    for i in clean:    
-        amount_patches_vertical = dataset[int(i)].shape[1] / patch_height
-        amount_patches_horizontal = dataset[int(i)].shape[0] / patch_width
-        patch_amount = math.ceil(amount_patches_vertical) * math.ceil(amount_patches_horizontal)
-        amount_per_image = int(patch_amount * trainingpercentage)
-    
-        random.shuffle(clean[i])
-        Training_dataset[i] = clean[i][:amount_per_image]
-        clean[i] = clean[i][amount_per_image:]
-        
-    #### CREATE TESTING,VALIDATION DATASET
-
-
-    for i in clean:
-        amount_patches_vertical = dataset[int(i)].shape[1] / patch_height
-        amount_patches_horizontal = dataset[int(i)].shape[0] / patch_width
-        patch_amount = math.ceil(amount_patches_vertical) * math.ceil(amount_patches_horizontal)
-        amount_per_image_testing = int(patch_amount * testingpercentage)
-        amount_per_image_validation = int(patch_amount * validationpercentage)
-
-        random.shuffle(annotated[i])
-        Testing_dataset[i] = clean[i][:amount_per_image_testing]
-        Testing_dataset[i].extend(annotated[i][:amount_per_image_testing])
-        clean[i] = clean[i][amount_per_image_testing:]
-        annotated[i] = clean[i][amount_per_image_testing:]
-
-        Validation_dataset[i] = clean[i][:amount_per_image_validation]
-        Validation_dataset[i].extend(annotated[i][:amount_per_image_validation])
-        clean[i] = clean[i][amount_per_image_validation:]
-        annotated[i] = clean[i][amount_per_image_validation:]
-
-
-    training_path = os.getcwd() + "\\Training\\"
-    testing_path = os.getcwd() + "\\Testing\\"
-    validation_path = os.getcwd() + "\\Validation\\"
-    Patches_path = os.getcwd() + "\\Patches\\"
-    if not os.path.exists(training_path):
-        os.makedirs(training_path)
-    if not os.path.exists(testing_path):
-        os.makedirs(testing_path)
-    if not os.path.exists(validation_path):
-        os.makedirs(validation_path)
-    for i in Training_dataset:
-        for j in Training_dataset[i]:
-            source = Patches_path + i + "\\" + j + ".png"
-            destination = training_path + j + ".png"
-            os.rename(source,destination)
-    for i in Testing_dataset:
-        for j in Testing_dataset[i]:
-            source = Patches_path + i + "\\" + j + ".png"
-            destination = testing_path + j + ".png"
-            os.rename(source,destination)
-    for i in Validation_dataset:
-        for j in Validation_dataset[i]:
-            source = Patches_path + i + "\\" + j + ".png"
-            destination = validation_path + j + ".png"
-            os.rename(source,destination)
-    #get list of all patches for each set
-    TrainingList = [patchid for list in Training_dataset.values() for patchid in list]
-    TestingList = [patchid for list in Testing_dataset.values() for patchid in list]
-    ValidationList = [patchid for list in Validation_dataset.values() for patchid in list]
-    file = {"Training": TrainingList, "Testing": TestingList, "Validation": ValidationList}
-    #Making the json file
-    with open("DataSplit.json", "w") as f:
-        json.dump(file, f)
-
-
-
-
-
-
-
-#Datasplitting(0.60,0.20,0.20,dataset)
-
-
-
-
+##################### TRAINING + Validation #####################################
+pipeline = MLPipeline(model, device, loss_fn, optim)
+log_dict = pipeline.train_epochs(70,training_loader, validation_loader,True)

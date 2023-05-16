@@ -1,4 +1,4 @@
-from FAAMDataset import *
+from custom_datasets.FAAMDataset import *
 import matplotlib.pyplot as plt
 from PIL import Image
 import pandas as pd
@@ -108,7 +108,7 @@ class Patch:
         for i in range(len(self.data)):
             self.CreatePatchesImage(self.data[i], i)
         df = pd.DataFrame(self.csv)
-        df.to_csv('Patches.csv')
+        df.to_csv('PatchData/Patches.csv')
 
     def is_segmentation_in_patch(self, segmentation, patch_left, patch_top, patch_right, patch_bottom):
         if patch_left <= segmentation[1] <= patch_right and patch_top <= segmentation[0] <= patch_bottom:
