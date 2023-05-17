@@ -25,6 +25,8 @@ def dataPrep():
     Datasplitting(0.60,0.20,0.20,dataset, patch_height=patch_height, patch_width=patch_width)
     n = Normalize("PatchData/DataSplit.json")
     n.normalize_images()
+n = Normalize("PatchData/DataSplit.json")
+n.normalize_images()
 print("Data prep finished")
 #-------------------------------------------------- Model Training -------------------------------------------------------------------------
 
