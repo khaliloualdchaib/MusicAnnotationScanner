@@ -33,7 +33,6 @@ class PatchDataset(Dataset):
         #img = img.to(device)  # Move the tensor to the GPU or CPU
         ############################
         img = img.permute(1, 2, 0)
-        img = img[:, :, :3]
         return img, filtered_df["Annotation"].iloc[0]
     def ShowImage(self, Tensor_Image):
         # Convert the tensor to a numpy array

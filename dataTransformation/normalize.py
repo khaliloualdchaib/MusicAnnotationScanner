@@ -10,22 +10,56 @@ class Normalize:
     def __init__(self,DataSplitJSON) -> None:
          with open(DataSplitJSON, "r") as f:
             self.json = json.load(f)
-    
-    def normalize_images(self):
-        """
-        Calculates mean and std of the training images and then normalizes all images in training,validation,testing based on the mean and std
-        """
+
+    def get_mean_std(self):
+        channels_sum = torch.zeros(3)
+        channels_squared_sum = torch.zeros(3)
+
         path = os.getcwd() + "\\Training\\"
-        mean_images = []
+        for j in tqdm(self.json["Training"], desc="Calculating mean and std of Training set"):
+            img_path = path + j + ".png"
+            img = io.imread(img_path)
+            img = img[:, :, :3]
+            image = transforms.ToTensor()(img)
+            channels_sum += torch.mean(image, dim=[1, 2])
+            channels_squared_sum += torch.mean(image ** 2, dim=[1, 2])
+        
+        num_images = len(self.json["Training"])
+        mean = channels_sum / num_images
+        std = (channels_squared_sum / num_images - mean ** 2) ** 0.5
+        #print("Mean (R, G, B):", mean)
+        #print("Standard Deviation (R, G, B):", std)
+        print("Mean (R, G, B):", mean)
+        print("Standard Deviation (R, G, B):", std)
+        return mean, std
+    def normalize_images(self):
+        values = self.get_mean_std()
+        mean = values[0]
+        std = values[1]
+        for i in self.json:
+            path = os.getcwd() + "\\" + i + "\\"
+            for j in tqdm(self.json[i], desc="Normalizing " + str(i) + " set"):
+                img_path = path + j + ".png"
+                img = io.imread(img_path)
+                img = img[:, :, :3]
+                tensor_img = transforms.ToTensor()(img)
+                normalized_tensor_img = transforms.Normalize(mean=mean, std=std)(tensor_img)
+                pt_path = path + j + '.pt'
+                torch.save(normalized_tensor_img, pt_path)
+
+
+
+"""
+old normalize function    
+ def normalize_images(self):
+        path = os.getcwd() + "\\Training\\"
+        mean_images = []        
         for j in tqdm(self.json["Training"], desc="Calculating mean and std of Training set"):
             img_path = path + j + ".png"
             img = io.imread(img_path)
             img = img[:, :, :3]
             tensor_img = transforms.ToTensor()(img)
-            #print(tensor_img.shape)
-            #print(torch.mean(tensor_img, dim=(1, 2)).tolist())
             mean_images.append(torch.mean(tensor_img, dim=(1, 2)).tolist())
-
         # Convert the list to a NumPy array
         mean_images_array = np.array(mean_images)
 
@@ -36,11 +70,8 @@ class Normalize:
         std.append(1)
         print("Mean (R, G, B):", mean)
         print("Standard Deviation (R, G, B):", std)
-
-        """
         Mean (R, G, B): [0.8358980083480869, 0.7945440991078531, 0.6545946596475883]
         Standard Deviation (R, G, B): [0.07306775000426498, 0.06927377203989789, 0.09855596346528686]
-        """
       
         for i in self.json:
             path = os.getcwd() + "\\" + i + "\\"
@@ -54,3 +85,4 @@ class Normalize:
                 normalized_tensor_img = transforms.Normalize(mean=mean, std=std)(tensor_img)
                 pt_path = path + j + '.pt'
                 torch.save(normalized_tensor_img, pt_path)
+    """
