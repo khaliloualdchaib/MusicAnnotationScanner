@@ -25,8 +25,6 @@ def dataPrep():
     Datasplitting(0.60,0.20,0.20,dataset, patch_height=patch_height, patch_width=patch_width)
     n = Normalize("PatchData/DataSplit.json")
     n.normalize_images()
-n = Normalize("PatchData/DataSplit.json")
-n.normalize_images()
 print("Data prep finished")
 #-------------------------------------------------- Model Training -------------------------------------------------------------------------
 
@@ -57,4 +55,4 @@ optim = torch.optim.Adam(model.parameters(), lr=lr)
 
 ##################### TRAINING + Validation #####################################
 pipeline = MLPipeline(model, device, loss_fn, optim)
-log_dict = pipeline.train_epochs(70,training_loader, validation_loader,True)
+log_dict = pipeline.train_epochs(25,training_loader, validation_loader,True)
