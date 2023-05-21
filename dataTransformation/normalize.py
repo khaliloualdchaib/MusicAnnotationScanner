@@ -14,52 +14,24 @@ class Normalize:
             self.json = json.load(f)
 
     def get_mean_std(self):
-        transform = transforms.ToTensor()
-        total_pixels = 0
-        red_mean = 0
-        green_mean = 0
-        blue_mean = 0
-        red_var = 0
-        green_var = 0
-        blue_var = 0
         path = os.getcwd() + "\\Training\\"
+        mean = np.zeros(3)
+        std = np.zeros(3)
+        num_samples = len(self.json["Training"])
         for j in tqdm(self.json["Training"], desc="Calculating mean and std of Training set"):
             img_path = path + j + ".png"
             image = Image.open(img_path)
             rgb_image = image.convert("RGB")
-            tensor_image = transform(rgb_image)
+            tensor_image = np.array(rgb_image) / 255.0
+            mean += np.mean(tensor_image, axis=(0, 1))
+            std += np.std(tensor_image, axis=(0, 1))
 
-            total_pixels += tensor_image.numel()
-            red_channel = tensor_image[0].flatten()
-            green_channel = tensor_image[1].flatten()
-            blue_channel = tensor_image[2].flatten()
-
-            red_mean += torch.sum(red_channel)
-            green_mean += torch.sum(green_channel)
-            blue_mean += torch.sum(blue_channel)
-
-            red_var += torch.sum(torch.square(red_channel))
-            green_var += torch.sum(torch.square(green_channel))
-            blue_var += torch.sum(torch.square(blue_channel))
-
-        red_mean /= total_pixels
-        green_mean /= total_pixels
-        blue_mean /= total_pixels
-
-        red_var /= total_pixels
-        green_var /= total_pixels
-        blue_var /= total_pixels
-
-        red_std = np.sqrt(red_var - (red_mean ** 2)) if red_var > 0 else 0
-        green_std = np.sqrt(green_var - (green_mean ** 2)) if green_var > 0 else 0
-        blue_std = np.sqrt(blue_var - (blue_mean ** 2)) if blue_var > 0 else 0
-
-        means = torch.tensor([red_mean, green_mean, blue_mean])
-        stds = torch.tensor([red_std, green_std, blue_std])
-
-        print("Mean (R, G, B):", means)
-        print("Standard Deviation (R, G, B):", stds)
-        return means, stds
+        
+        mean /= num_samples
+        std /= num_samples
+        print("Mean (R, G, B):", mean)
+        print("Standard Deviation (R, G, B):", std)
+        return mean, std
         """
         channels_sum = torch.zeros(3)
         channels_squared_sum = torch.zeros(3)
@@ -86,14 +58,17 @@ class Normalize:
         values = self.get_mean_std()
         mean = values[0]
         std = values[1]
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(mean=mean, std=std)
+        ])
         for i in self.json:
             path = os.getcwd() + "\\" + i + "\\"
             for j in tqdm(self.json[i], desc="Normalizing " + str(i) + " set"):
                 img_path = path + j + ".png"
-                img = io.imread(img_path)
-                img = img[:, :, :3]
-                tensor_img = transforms.ToTensor()(img)
-                normalized_tensor_img = transforms.Normalize(mean=mean, std=std)(tensor_img)
+                image = Image.open(img_path)
+                rgb_image = image.convert("RGB")
+                normalized_tensor_img = transform(rgb_image)
                 pt_path = path + j + '.pt'
                 torch.save(normalized_tensor_img, pt_path)
 
