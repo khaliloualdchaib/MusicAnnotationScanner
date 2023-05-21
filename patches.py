@@ -4,7 +4,7 @@ from PIL import Image
 import pandas as pd
 from torchvision.utils import save_image
 import os
-
+from tqdm import tqdm
 
 class Patch:
     def __init__(self, data, height, width, root) -> None:
@@ -105,7 +105,7 @@ class Patch:
                     self.clean.append(self.patchcounter)
                 self.patchcounter += 1
     def CreatePatches(self):
-        for i in range(len(self.data)):
+        for i in tqdm(range(len(self.data)), desc="CREATE PATCHES"):
             self.CreatePatchesImage(self.data[i], i)
         df = pd.DataFrame(self.csv)
         df.to_csv('PatchData/Patches.csv')

@@ -57,15 +57,16 @@ def Datasplitting(trainingpercentage, testingpercentage, validationpercentage, d
         amount_per_image_validation = int(patch_amount * validationpercentage)
         random.seed(42)
         random.shuffle(annotated[i])
-        Testing_dataset[i] = clean[i][:amount_per_image_testing]
-        Testing_dataset[i].extend(annotated[i][:amount_per_image_testing])
-        clean[i] = clean[i][amount_per_image_testing:]
-        annotated[i] = clean[i][amount_per_image_testing:]
 
         Validation_dataset[i] = clean[i][:amount_per_image_validation]
         Validation_dataset[i].extend(annotated[i][:amount_per_image_validation])
         clean[i] = clean[i][amount_per_image_validation:]
         annotated[i] = clean[i][amount_per_image_validation:]
+
+        Testing_dataset[i] = clean[i][:amount_per_image_testing]
+        Testing_dataset[i].extend(annotated[i][:amount_per_image_testing])
+        clean[i] = clean[i][amount_per_image_testing:]
+        annotated[i] = clean[i][amount_per_image_testing:]
 
 
     training_path = os.getcwd() + "\\Training\\"
