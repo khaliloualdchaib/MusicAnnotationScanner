@@ -15,52 +15,39 @@ class Normalize:
         self.transform = transforms.ToTensor()
 
     def get_mean_std(self):
-        total_pixels = 0
+        total_pixels = 500*500*len(self.json["Training"])
         red_mean = 0
         green_mean = 0
         blue_mean = 0
-        red_var = 0
-        green_var = 0
-        blue_var = 0
+        red_std = 0
+        green_std = 0
+        blue_std = 0
         path = os.getcwd() + "\\Training\\"
         for j in tqdm(self.json["Training"], desc="Calculating mean of Training set"):
             img_path = path + j + ".png"
             image = Image.open(img_path)
             rgb_image = image.convert("RGB")
             tensor_image = self.transform(rgb_image)
-
-            total_pixels += tensor_image.numel()
+            
             R_mean, G_mean ,B_mean = torch.mean(tensor_image, dim = [1,2])
             red_mean += R_mean
             green_mean += G_mean
             blue_mean += B_mean
 
+            R_std, G_std ,B_std = torch.std(tensor_image, dim = [1,2])
+            red_std += R_std
+            green_std += G_std
+            blue_std += B_std
+
+            
+
         red_mean /= len(self.json["Training"])
         green_mean /= len(self.json["Training"])
         blue_mean /= len(self.json["Training"])
 
-        for j in tqdm(self.json["Training"], desc="Calculating std of Training set"):
-            img_path = path + j + ".png"
-            image = Image.open(img_path)
-            rgb_image = image.convert("RGB")
-            tensor_image = self.transform(rgb_image)
-
-            red_channel = tensor_image[0].flatten()
-            green_channel = tensor_image[1].flatten()
-            blue_channel = tensor_image[2].flatten()
-
-            red_var += torch.sum(torch.square(red_channel - red_mean))
-            green_var += torch.sum(torch.square(green_channel - green_mean))
-            blue_var += torch.sum(torch.square(blue_channel - blue_mean))
-        
-
-        red_var /= total_pixels
-        green_var /= total_pixels
-        blue_var /= total_pixels
-
-        red_std = np.sqrt(red_var)
-        green_std = np.sqrt(green_var)
-        blue_std = np.sqrt(blue_var)
+        red_std /= len(self.json["Training"])
+        green_std /= len(self.json["Training"])
+        blue_std /= len(self.json["Training"])
     
         means = torch.tensor([red_mean, green_mean, blue_mean])
         stds = torch.tensor([red_std, green_std, blue_std])
