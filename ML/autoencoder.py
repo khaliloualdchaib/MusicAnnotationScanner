@@ -54,7 +54,7 @@ class Autoencoder(nn.Module):
             nn.Linear(144, self.fcinputsize),
             nn.ReLU(True)
         )
-
+        
     # Calculate fc input
     def calculate_fc_input(self):
         width = 500

@@ -5,6 +5,8 @@ import os
 from skimage import io
 import torchvision.transforms as transforms
 from tqdm import tqdm
+from PIL import Image
+
 
 class Normalize:
     def __init__(self,DataSplitJSON) -> None:
@@ -12,6 +14,53 @@ class Normalize:
             self.json = json.load(f)
 
     def get_mean_std(self):
+        transform = transforms.ToTensor()
+        total_pixels = 0
+        red_mean = 0
+        green_mean = 0
+        blue_mean = 0
+        red_var = 0
+        green_var = 0
+        blue_var = 0
+        path = os.getcwd() + "\\Training\\"
+        for j in tqdm(self.json["Training"], desc="Calculating mean and std of Training set"):
+            img_path = path + j + ".png"
+            image = Image.open(img_path)
+            rgb_image = image.convert("RGB")
+            tensor_image = transform(rgb_image)
+
+            total_pixels += tensor_image.numel()
+            red_channel = tensor_image[0].flatten()
+            green_channel = tensor_image[1].flatten()
+            blue_channel = tensor_image[2].flatten()
+
+            red_mean += torch.sum(red_channel)
+            green_mean += torch.sum(green_channel)
+            blue_mean += torch.sum(blue_channel)
+
+            red_var += torch.sum(torch.square(red_channel))
+            green_var += torch.sum(torch.square(green_channel))
+            blue_var += torch.sum(torch.square(blue_channel))
+
+        red_mean /= total_pixels
+        green_mean /= total_pixels
+        blue_mean /= total_pixels
+
+        red_var /= total_pixels
+        green_var /= total_pixels
+        blue_var /= total_pixels
+
+        red_std = np.sqrt(red_var - (red_mean ** 2)) if red_var > 0 else 0
+        green_std = np.sqrt(green_var - (green_mean ** 2)) if green_var > 0 else 0
+        blue_std = np.sqrt(blue_var - (blue_mean ** 2)) if blue_var > 0 else 0
+
+        means = torch.tensor([red_mean, green_mean, blue_mean])
+        stds = torch.tensor([red_std, green_std, blue_std])
+
+        print("Mean (R, G, B):", means)
+        print("Standard Deviation (R, G, B):", stds)
+        return means, stds
+        """
         channels_sum = torch.zeros(3)
         channels_squared_sum = torch.zeros(3)
 
@@ -32,6 +81,7 @@ class Normalize:
         print("Mean (R, G, B):", mean)
         print("Standard Deviation (R, G, B):", std)
         return mean, std
+        """
     def normalize_images(self):
         values = self.get_mean_std()
         mean = values[0]
