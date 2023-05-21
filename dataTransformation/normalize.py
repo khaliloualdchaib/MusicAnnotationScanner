@@ -16,39 +16,54 @@ class Normalize:
 
     def get_mean_std(self):
         total_pixels = 500*500*len(self.json["Training"])
+        pixels_in_image = 500*500
         red_mean = 0
         green_mean = 0
         blue_mean = 0
-        red_std = 0
-        green_std = 0
-        blue_std = 0
+        red_var = 0
+        green_var = 0
+        blue_var = 0
         path = os.getcwd() + "\\Training\\"
         for j in tqdm(self.json["Training"], desc="Calculating mean of Training set"):
             img_path = path + j + ".png"
             image = Image.open(img_path)
             rgb_image = image.convert("RGB")
             tensor_image = self.transform(rgb_image)
+
+            red_channel = tensor_image[0].flatten()
+            green_channel = tensor_image[1].flatten()
+            blue_channel = tensor_image[2].flatten()
+
+            red_mean += torch.sum(red_channel)
+            green_mean += torch.sum(green_channel)
+            blue_mean += torch.sum(blue_channel)
             
-            R_mean, G_mean ,B_mean = torch.mean(tensor_image, dim = [1,2])
-            red_mean += R_mean
-            green_mean += G_mean
-            blue_mean += B_mean
+        red_mean /= total_pixels
+        green_mean /= total_pixels
+        blue_mean /= total_pixels
 
-            R_std, G_std ,B_std = torch.std(tensor_image, dim = [1,2])
-            red_std += R_std
-            green_std += G_std
-            blue_std += B_std
+        for j in tqdm(self.json["Training"], desc="Calculating std of Training set"):
+            img_path = path + j + ".png"
+            image = Image.open(img_path)
+            rgb_image = image.convert("RGB")
+            tensor_image = self.transform(rgb_image)
 
-            
+            red_channel = tensor_image[0].flatten()
+            green_channel = tensor_image[1].flatten()
+            blue_channel = tensor_image[2].flatten()
 
-        red_mean /= len(self.json["Training"])
-        green_mean /= len(self.json["Training"])
-        blue_mean /= len(self.json["Training"])
+            red_var += torch.sum(torch.square(red_channel - red_mean))
+            green_var += torch.sum(torch.square(green_channel - green_mean))
+            blue_var += torch.sum(torch.square(blue_channel - blue_mean))            
 
-        red_std /= len(self.json["Training"])
-        green_std /= len(self.json["Training"])
-        blue_std /= len(self.json["Training"])
-    
+        red_var /= total_pixels
+        green_var /= total_pixels
+        blue_var /= total_pixels
+
+        red_std = np.sqrt(red_var)
+        green_std = np.sqrt(green_var)
+        blue_std = np.sqrt(blue_var)
+
         means = torch.tensor([red_mean, green_mean, blue_mean])
         stds = torch.tensor([red_std, green_std, blue_std])
 
@@ -56,9 +71,9 @@ class Normalize:
         print("Standard Deviation (R, G, B):", stds)
         return means, stds
     def normalize_images(self):
-        values = self.get_mean_std()
-        mean = values[0]
-        std = values[1]
+        #values = self.get_mean_std()
+        #mean = values[0]
+        #std = values[1]
         for i in self.json:
             path = os.getcwd() + "\\" + i + "\\"
             for j in tqdm(self.json[i], desc="Normalizing " + str(i) + " set"):
@@ -66,7 +81,11 @@ class Normalize:
                 image = Image.open(img_path)
                 rgb_image = image.convert("RGB")
                 tensor_image = self.transform(rgb_image)
-                normalized_tensor_img = transforms.Normalize(mean=mean, std=std)(tensor_image)
+                #print("Minimum value of tensor_image:", tensor_image.min())
+                #print("Maximum value of tensor_image:", tensor_image.max())
+                normalized_tensor_img = transforms.Normalize(mean=0, std=1)(tensor_image)
+                #print("Minimum value of normalized_tensor_img:", normalized_tensor_img.min())
+                #print("Maximum value of normalized_tensor_img:", normalized_tensor_img.max())
                 pt_path = path + j + '.pt'
                 torch.save(normalized_tensor_img, pt_path)
 
