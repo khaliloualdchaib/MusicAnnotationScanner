@@ -25,8 +25,7 @@ def dataPrep():
     Datasplitting(0.60,0.20,0.20,dataset, patch_height=patch_height, patch_width=patch_width)
     n = Normalize("PatchData/DataSplit.json")
     n.normalize_images()
-n = Normalize("PatchData/DataSplit.json")
-n.normalize_images()
+    
 print("Data prep finished")
 
 #-------------------------------------------------- Model Training -------------------------------------------------------------------------
@@ -48,7 +47,7 @@ model = Autoencoder()
 
 model.to(device)
 
-loss_fn = torch.nn.MSELoss()
+loss_fn = torch.nn.BCELoss()
 lr= 0.001
 
 ### Set the random seed for reproducible results

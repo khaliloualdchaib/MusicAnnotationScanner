@@ -13,8 +13,10 @@ class Autoencoder(nn.Module):
         self.encoder_cl = nn.Sequential(
             nn.Conv2d(3,8,3,stride=2, padding=1),
             nn.ReLU(True),
+            nn.Dropout2d(p=0.2),
             nn.Conv2d(8,16,3,stride=2, padding=1),
             nn.ReLU(True),
+            nn.Dropout2d(p=0.2),
             nn.Conv2d(16,32,3,stride=2, padding=0),
             nn.ReLU(True),
         )
@@ -22,8 +24,10 @@ class Autoencoder(nn.Module):
         self.decoder_cl = nn.Sequential(
             nn.ConvTranspose2d(32, 16, 3, stride=2, output_padding=0),
             nn.ReLU(True),
+            nn.Dropout2d(p=0.2),
             nn.ConvTranspose2d(16, 8, 3, stride=2, padding=1, output_padding=1),
             nn.ReLU(True),
+            nn.Dropout2d(p=0.2),
             nn.ConvTranspose2d(8, 3, 3, stride=2, padding=1, output_padding=1)
         )
 
@@ -39,12 +43,14 @@ class Autoencoder(nn.Module):
         self.enconder_fcl = nn.Sequential(
             nn.Linear(self.fcinputsize,144),
             nn.ReLU(True),
+            nn.Dropout(p=0.5),
             nn.Linear(144, 72)
         )
 
         self.decoder_fcl = nn.Sequential(
             nn.Linear(72, 144),
             nn.ReLU(True),
+            nn.Dropout(p=0.5),
             nn.Linear(144, self.fcinputsize),
             nn.ReLU(True)
         )
