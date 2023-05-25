@@ -6,10 +6,11 @@ from math import floor
 
 class Autoencoder(nn.Module):
     
-    def __init__(self) -> None:
+    def __init__(self, input_height, input_width) -> None:
         super().__init__()
+        self.height = input_height
+        self.width = input_width
 
-        #Convolutional layers
         self.encoder_cl = nn.Sequential(
             nn.Conv2d(3,8,3,stride=2, padding=1),
             nn.ReLU(True),
@@ -30,35 +31,10 @@ class Autoencoder(nn.Module):
             nn.Dropout2d(p=0.2),
             nn.ConvTranspose2d(8, 3, 3, stride=2, padding=1, output_padding=1)
         )
-
         
-        #Flatten lineair
-        self.flatten = nn.Flatten(start_dim=1)
-        #Unflatten
-        self.unflatten = nn.Unflatten(dim=1, 
-        unflattened_size=(self.calculate_fc_input()[0], self.calculate_fc_input()[1], self.calculate_fc_input()[2]))
-        # Calculat fc inputsize
-        self.fcinputsize = self.calculate_fc_input()[0] * self.calculate_fc_input()[1] * self.calculate_fc_input()[2]
-        #Fully conected layers
-        self.enconder_fcl = nn.Sequential(
-            nn.Linear(self.fcinputsize,144),
-            nn.ReLU(True),
-            nn.Dropout(p=0.5),
-            nn.Linear(144, 72)
-        )
-
-        self.decoder_fcl = nn.Sequential(
-            nn.Linear(72, 144),
-            nn.ReLU(True),
-            nn.Dropout(p=0.5),
-            nn.Linear(144, self.fcinputsize),
-            nn.ReLU(True)
-        )
-        
-    # Calculate fc input
     def calculate_fc_input(self):
-        width = 500
-        height = 500
+        width = self.width
+        height = self.height
         lastfilter_size = 0
         for module in self.encoder_cl.children():
             if isinstance(module,nn.Conv2d):
@@ -78,10 +54,6 @@ class Autoencoder(nn.Module):
     # Forward
     def forward(self, x):
         x = self.encoder_cl(x)
-        x = self.flatten(x)
-        x = self.enconder_fcl(x)
-        x = self.decoder_fcl(x)
-        x = self.unflatten(x)
         x = self.decoder_cl(x)
         x = torch.sigmoid(x)
         return x

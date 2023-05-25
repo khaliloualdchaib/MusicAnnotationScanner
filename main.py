@@ -25,7 +25,6 @@ def dataPrep():
     Datasplitting(0.60,0.20,0.20,dataset, patch_height=patch_height, patch_width=patch_width)
     n = Normalize("PatchData/DataSplit.json")
     n.normalize_images()
-    
 print("Data prep finished")
 
 #-------------------------------------------------- Model Training -------------------------------------------------------------------------
@@ -39,15 +38,18 @@ training_loader = DataLoader(trainingdata, batch_size=batch_size)
 testing_loader = DataLoader(testdata, batch_size=batch_size)
 validation_loader = DataLoader(validationdata, batch_size=batch_size)
 
+
+
 ##################### PARAMETERS #####################################
 # Check if the GPU is available
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-model = Autoencoder()
+model = Autoencoder(500, 500)
 
 model.to(device)
 
-loss_fn = torch.nn.BCELoss()
+loss_fn = torch.nn.MSELoss()
+
 lr= 0.001
 
 ### Set the random seed for reproducible results

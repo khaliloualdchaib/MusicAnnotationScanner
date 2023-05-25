@@ -71,9 +71,6 @@ class Normalize:
         print("Standard Deviation (R, G, B):", stds)
         return means, stds
     def normalize_images(self):
-        #values = self.get_mean_std()
-        #mean = values[0]
-        #std = values[1]
         for i in self.json:
             path = os.getcwd() + "\\" + i + "\\"
             for j in tqdm(self.json[i], desc="Normalizing " + str(i) + " set"):
@@ -81,11 +78,7 @@ class Normalize:
                 image = Image.open(img_path)
                 rgb_image = image.convert("RGB")
                 tensor_image = self.transform(rgb_image)
-                #print("Minimum value of tensor_image:", tensor_image.min())
-                #print("Maximum value of tensor_image:", tensor_image.max())
                 normalized_tensor_img = transforms.Normalize(mean=0, std=1)(tensor_image)
-                #print("Minimum value of normalized_tensor_img:", normalized_tensor_img.min())
-                #print("Maximum value of normalized_tensor_img:", normalized_tensor_img.max())
                 pt_path = path + j + '.pt'
                 torch.save(normalized_tensor_img, pt_path)
 
