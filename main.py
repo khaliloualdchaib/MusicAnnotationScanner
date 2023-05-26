@@ -59,4 +59,4 @@ optim = torch.optim.Adam(model.parameters(), lr=lr)
 
 ##################### TRAINING + Validation #####################################
 pipeline = MLPipeline(model, device, loss_fn, optim)
-log_dict = pipeline.train_epochs(70,training_loader, validation_loader,True)
+log_dict = pipeline.train_epochs(40,training_loader, validation_loader,True)
