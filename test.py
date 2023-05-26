@@ -10,20 +10,20 @@ from torch.utils.data import DataLoader
 from ML.MLPipeline import * 
 from torchvision import transforms
 from datasplit import Datasplitting
+from torchviz import make_dot
 import sys
 trainingdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Training")
-print(trainingdata[0][0].shape)
+validationdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Validation")
 
-model = Autoencoder()
+
+model = Autoencoder(500,500)
 model.load_state_dict(torch.load("autoencoder.pth"))
 model.eval()
-img_tensor = trainingdata[0][0]
-print(img_tensor.max())
 
-
-
-"""
+img_tensor = validationdata[22][0]
 trainingdata.ShowImage(img_tensor)
+
+
 img_tensor = torch.unsqueeze(img_tensor, 0)
 img_tensor = img_tensor.permute(0, 3, 1, 2)
 
@@ -34,4 +34,4 @@ output = output.permute(1,2,0)
 image_array = output.detach().numpy()
 plt.imshow(image_array)
 plt.show()
-"""
+

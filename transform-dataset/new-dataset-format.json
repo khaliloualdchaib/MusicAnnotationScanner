@@ -3,11 +3,10 @@
         {
             "id": 5,
             "dataset_id": 2,
-            "category_ids": [],
-            "path": "/datasets/FAAM-corpus/Benoit - Conte et Ballades/Barcode-030902415212/kca-benoi-contbal-030902415212-ps-00005.jpg",
+            "path": "path",
             "width": 2972,
             "height": 3983,
-            "file_name": "kca-benoi-contbal-030902415212-ps-00005.jpg",
+            "file_name": "path",
             "annotated": true,
             "annotations": [
                 {

@@ -88,7 +88,7 @@ class MLPipeline:
 
                 # Flatten the input and output tensors
                 images = images.permute(0, 3, 1, 2)
-                outputs_flat = (self.network(images)).view(-1)
+                outputs_flat = (self.network(images)).reshape(-1)
                 inputs_flat = images.reshape(-1)    
 
                 # Calculate the mean squared error between the input and output tensors
