@@ -60,3 +60,9 @@ optim = torch.optim.Adam(model.parameters(), lr=lr)
 ##################### TRAINING + Validation #####################################
 pipeline = MLPipeline(model, device, loss_fn, optim)
 log_dict = pipeline.train_epochs(40,training_loader, validation_loader,True)
+sys.exit()
+##################### TESTING #####################################
+model.load_state_dict(torch.load("autoencoder_reduced_filters.pth", map_location=torch.device('cpu')))
+model.eval()
+
+pipeline.test_model(testing_loader, model)
