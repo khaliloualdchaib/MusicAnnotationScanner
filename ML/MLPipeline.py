@@ -103,8 +103,8 @@ class MLPipeline:
 
         return numpy_network_accuracy
 
-    def test_model(self, dataloader, model):
-        network_accuracy = 0
+    def get_reconstruction_errors(self, dataloader, model):
+        reconstruction_errors = []
         with torch.no_grad():
             for images, labels in tqdm(dataloader):
                 images, labels = images.to(torch.float32).to(self.device), labels.to(self.device)
@@ -114,15 +114,9 @@ class MLPipeline:
                 inputs_flat = images.reshape(-1)
                 # Calculate the mean squared error between the input and output tensors
                 mse = torch.mean(torch.square(outputs_flat - inputs_flat)) # Question input - output
-                #print("Mse",mse)
-                # Calculate the accuracy as the percentage of pixels that are accurately reconstructed
-                accuracy = 100 * (1 - mse) # Question / torch.mean(torch.square(inputs_flat)))
-                #print("accuracy",accuracy)
-                network_accuracy += accuracy
-        network_accuracy /= len(dataloader)
-        numpy_network_accuracy = network_accuracy.cpu().numpy()
-        print("Accuracy on the test data is ", numpy_network_accuracy)
-        return numpy_network_accuracy
+                reconstruction_errors.append(mse)
+        return reconstruction_errors
+        
     def train_epochs(self, epochs, training_set, validation_set, saveModel=False):
 
         #  creating log

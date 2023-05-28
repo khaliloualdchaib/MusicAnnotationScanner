@@ -2,15 +2,15 @@ from custom_datasets.FAAMDataset import *
 from patches import *
 from custom_datasets.PatchDataset import *
 from dataTransformation.normalize import Normalize
-from dataTransformation.toTensor import ToTensor
 from ML.autoencoder import *
 from ML.MLPipeline import *
 from custom_datasets.PatchDataset import *
 from torch.utils.data import DataLoader
 from ML.MLPipeline import * 
-from torchvision import transforms
 from datasplit import Datasplitting
 import sys
+import matplotlib.pyplot as plt
+
 
 
 #-------------------------------------------------- DATA PREP -------------------------------------------------------------------------
@@ -59,10 +59,15 @@ optim = torch.optim.Adam(model.parameters(), lr=lr)
 
 ##################### TRAINING + Validation #####################################
 pipeline = MLPipeline(model, device, loss_fn, optim)
-log_dict = pipeline.train_epochs(40,training_loader, validation_loader,True)
+#log_dict = pipeline.train_epochs(40,training_loader, validation_loader,True)
 sys.exit()
-##################### TESTING #####################################
+##################### Analyze the distribution of reconstruction errors #####################################
 model.load_state_dict(torch.load("autoencoder_reduced_filters.pth", map_location=torch.device('cpu')))
 model.eval()
+errors = pipeline.get_reconstruction_errors(validation_loader, model)
 
-pipeline.test_model(testing_loader, model)
+plt.hist(errors, bins='auto')
+plt.xlabel('Reconstruction Error')
+plt.ylabel('Frequency')
+plt.title('Distribution of Reconstruction Errors')
+plt.show()
