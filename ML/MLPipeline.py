@@ -128,10 +128,24 @@ class MLPipeline:
                     outputs_flat = (output).reshape(-1)
                     inputs_flat = images.reshape(-1)
                     # Calculate the mean squared error between the input and output tensors
-                    mse = torch.mean(torch.square(outputs_flat - inputs_flat)) # Question input - output
+                    mse = torch.mean(torch.square(outputs_flat - inputs_flat))
                     reconstruction_errors.append(mse)
             return reconstruction_errors
-        
+    def test_model(self, model, test_loader, threshold):
+        accuracy = 0
+        with torch.no_grad():
+            for images, labels in test_loader:
+                images, labels = images.to(torch.float32).to(self.device), labels.to(self.device)
+                images = images.permute(0, 3, 1, 2)
+                output = model(images)
+                outputs_flat = (output).reshape(-1)
+                inputs_flat = images.reshape(-1)
+                mse = torch.mean(torch.square(outputs_flat - inputs_flat))
+                prediction = mse > threshold
+                accuracy += torch.sum(prediction == labels).item()
+        total_instances = len(test_loader.dataset)
+        accuracy = accuracy / total_instances
+        return accuracy
     def train_epochs(self, epochs, training_set, validation_set, saveModel=False):
 
         #  creating log

@@ -26,8 +26,6 @@ def dataPrep():
     n = Normalize("PatchData/DataSplit.json")
     n.normalize_images()
 print("Data prep finished")
-dataPrep()
-
 #-------------------------------------------------- Model Training -------------------------------------------------------------------------
 
 ##################### DATA LOADING #####################################
@@ -62,8 +60,10 @@ optim = torch.optim.Adam(model.parameters(), lr=lr)
 pipeline = MLPipeline(model, device, loss_fn, optim)
 #log_dict = pipeline.train_epochs(40,training_loader, validation_loader,True)
 ##################### Analyze the distribution of reconstruction errors #####################################
-model.load_state_dict(torch.load("autoencoder_reduced_filters.pth", map_location=torch.device('cpu')))
-model.eval()
+#model.load_state_dict(torch.load("autoencoder_reduced_filters.pth", map_location=torch.device('cpu')))
+#model.eval()
+print(pipeline.test_model(model, testing_loader, 0.006))
+sys.exit()
 errors = pipeline.get_reconstruction_errors(testing_loader, model)
 
 plt.hist(errors, bins='auto')
