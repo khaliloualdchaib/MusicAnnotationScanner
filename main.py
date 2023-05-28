@@ -26,6 +26,7 @@ def dataPrep():
     n = Normalize("PatchData/DataSplit.json")
     n.normalize_images()
 print("Data prep finished")
+dataPrep()
 
 #-------------------------------------------------- Model Training -------------------------------------------------------------------------
 

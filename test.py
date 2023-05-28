@@ -13,15 +13,27 @@ from datasplit import Datasplitting
 from torchviz import make_dot
 import sys
 trainingdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Training")
-validationdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Validation")
+testingdata = PatchDataset("PatchData/Patches.csv", "PatchData/DataSplit.json", "Testing")
 
+index = None
+with open("PatchData/DataSplit.json", "r") as f:
+    jsonfile = json.load(f)
+    len(jsonfile["Testing"])
+    for i in range(len(jsonfile["Testing"])):
+        #print(jsonfile["Testing"][int(i)])
+        if(jsonfile["Testing"][int(i)] == str(7053)):
+            index = int(i)
 
+print(jsonfile["Testing"][index])
+for i in range(len(testingdata)):
+    print(testingdata[i][1])
+    
 model = Autoencoder(500,500)
-model.load_state_dict(torch.load("autoencoder.pth"))
+model.load_state_dict(torch.load("autoencoder_reduced_filters.pth"))
 model.eval()
 
-img_tensor = validationdata[22][0]
-trainingdata.ShowImage(img_tensor)
+img_tensor = testingdata[index][0]
+testingdata.ShowImage(img_tensor)
 
 
 img_tensor = torch.unsqueeze(img_tensor, 0)
@@ -34,4 +46,6 @@ output = output.permute(1,2,0)
 image_array = output.detach().numpy()
 plt.imshow(image_array)
 plt.show()
+
+
 
